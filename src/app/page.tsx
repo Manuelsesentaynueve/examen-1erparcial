@@ -8,59 +8,70 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const router = useRouter();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const loginnuevo = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (usuario === 'admin' && password === 'admin123') {
       router.push('/dashboard');
     } else {
-      setError('Credenciales incorrectas. Intente de nuevo.');
+      setError('incorrecto, quien sos vos???');
     }
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold text-center text-gray-800">Control de Gastos</h1>
-        <p className="text-sm text-center text-gray-500">Inicie sesión para administrar su presupuesto</p>
-        
-        <form className="space-y-4" onSubmit={handleLogin}>
+    <main className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-4">
+      <div className="mb-8 text-center">
+         <h1 className="text-4xl font-black text-yellow-400 uppercase tracking-tighter italic">
+           Mis Gastos
+         </h1>
+         <p className="text-slate-400 text-sm">estos estilos los hice con ia</p>
+      </div>
+
+      <div className="w-full max-w-sm bg-slate-800 p-1 border-t-4 border-yellow-500 shadow-2xl">
+        <form className="bg-slate-800 p-6 space-y-5" onSubmit={loginnuevo}>
+          
           <div>
-            <label className="block text-sm font-medium text-gray-700">Usuario</label>
+            <label className="text-xs font-bold text-yellow-500 uppercase">User ID</label>
             <input
               type="text"
               required
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-black"
+              className="w-full bg-slate-700 border-b-2 border-slate-600 p-3 text-white focus:border-yellow-500 outline-none transition-all"
               value={usuario}
               onChange={(e) => setUsuario(e.target.value)}
-              placeholder="Ej. admin"
+              placeholder="admin"
             />
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700">Contraseña</label>
+            <label className="text-xs font-bold text-yellow-500 uppercase">Password</label>
             <input
               type="password"
               required
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-black"
+              className="w-full bg-slate-700 border-b-2 border-slate-600 p-3 text-white focus:border-yellow-500 outline-none transition-all"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
+              placeholder="****"
             />
           </div>
 
           {error && (
-            <p className="text-sm text-red-600 font-medium">{error}</p>
+            <div className="bg-red-900/50 border-l-4 border-red-500 p-2">
+               <p className="text-xs text-red-200 font-bold">{error}</p>
+            </div>
           )}
 
           <button
             type="submit"
-            className="w-full py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors"
+            className="w-full bg-yellow-500 hover:bg-yellow-400 text-slate-900 font-black py-3 uppercase transition-transform active:scale-95"
           >
-            Entrar al Sistema
+            Acceder al Sistema
           </button>
         </form>
       </div>
+
+      <footer className="mt-10 text-slate-500 text-[10px] uppercase">
+        holaaa
+      </footer>
     </main>
   );
 }
