@@ -11,10 +11,7 @@ export default function LoginPage() {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validación según instrucciones del examen
     if (usuario === 'admin' && password === 'admin123') {
-      // En un examen real podrías guardar esto en un estado global de "auth"
-      // pero para avanzar rápido, redirigimos al Dashboard
       router.push('/dashboard');
     } else {
       setError('Credenciales incorrectas. Intente de nuevo.');

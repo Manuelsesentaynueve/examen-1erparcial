@@ -1,31 +1,37 @@
 'use client';
-import { useGastos } from '../../context/gastocontext';
+import { usargastos } from '../../context/gastocontext';
 import { useState, useEffect } from 'react';
 
 export default function DashboardPage() {
-  const { presupuesto, setPresupuesto, gastos, cargarGastos } = useGastos();
+  const { 
+    presupuesto, 
+    ponerPresupuesto, 
+    gastos, 
+    cargarGastos, 
+    agregarunnuevogasto, 
+    categorias, 
+    agregarunacategoria 
+  } = usargastos();
+  
   const [nuevoPresupuesto, setNuevoPresupuesto] = useState(0);
 
-  // Al cargar la página, traemos los gastos de la API
-  useEffect(() => {
+  useEffect(() => 
+    {
     cargarGastos();
   }, []);
 
-  // Calculamos el total de gastos acumulados
- const totalGastos = gastos?.reduce((acc: number, item: any) => {
+  const totaldelosgastos = gastos?.reduce((acc: number, item: any) => {
     return acc + (Number(item.monto) || 0);
   }, 0) || 0;
-  // Lógica de Alertas
-  const porcentajeConsumido = presupuesto > 0 ? (totalGastos / presupuesto) * 100 : 0;
-  const supero80 = porcentajeConsumido >= 80 && porcentajeConsumido < 100;
-  const supero100 = porcentajeConsumido >= 100;
+
+  const porcentajequeconsumiste = presupuesto > 0 ? (totaldelosgastos / presupuesto) * 100 : 0;
+  const superaste80 = porcentajequeconsumiste >= 80 && porcentajequeconsumiste < 100;
+  const superasteel100 = porcentajequeconsumiste >= 100;
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-4xl mx-auto space-y-6">
-        <h1 className="text-3xl font-bold text-gray-800">Panel de Control Financiero</h1>
-
-        {/* SECCIÓN DE PRESUPUESTO */}
+        <h1 className="text-3xl font-bold text-gray-800">Cuida tus finanzas pues</h1>
         <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200">
           <h2 className="text-xl font-semibold mb-4 text-gray-700">Presupuesto Mensual</h2>
           <div className="flex gap-4 items-end">
@@ -39,13 +45,12 @@ export default function DashboardPage() {
               />
             </div>
             <button 
-              onClick={() => setPresupuesto(nuevoPresupuesto)}
+              onClick={() => ponerPresupuesto(nuevoPresupuesto)}
               className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition"
             >
               Establecer
             </button>
           </div>
-
           <div className="mt-6 grid grid-cols-2 gap-4">
             <div className="p-4 bg-blue-50 rounded-lg">
               <p className="text-sm text-blue-600 font-bold uppercase">Presupuesto Actual</p>
@@ -53,23 +58,84 @@ export default function DashboardPage() {
             </div>
             <div className="p-4 bg-purple-50 rounded-lg">
               <p className="text-sm text-purple-600 font-bold uppercase">Gastado a la fecha</p>
-              <p className="text-2xl font-mono text-black">L. {totalGastos.toLocaleString()}</p>
+              <p className="text-2xl font-mono text-black">L. {totaldelosgastos.toLocaleString()}</p>
             </div>
           </div>
-
-          {/* ALERTAS DINÁMICAS (Requisito del examen) */}
           <div className="mt-4">
-            {supero80 && !supero100 && (
+            {superaste80 && !superasteel100 && (
               <div className="p-4 bg-yellow-400 text-yellow-900 font-bold rounded-lg animate-pulse">
-                ⚠️ Cuidado: Has alcanzado el 80% de tu presupuesto.
+                Chivas ya alcanzaste el 80% de tu presupuesto, tene cuidado 
               </div>
             )}
-            
-            {supero100 && (
+            {superasteel100 && (
               <div className="p-4 bg-red-600 text-white font-bold rounded-lg shadow-lg">
-                🚨 Has superado el límite del presupuesto, debes ajustar gastos.
+                acabas de superar el limite del presupuesto tenes que ajustar tus gastos!!!
               </div>
             )}
+          </div>
+        </div>
+        <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+          <h2 className="text-xl font-semibold mb-4 text-gray-700">Registrar un nuevo gasto</h2>
+          <form 
+            className="grid grid-cols-1 md:grid-cols-4 gap-4"
+            onSubmit={async (e) => {
+              e.preventDefault();
+              const form = e.currentTarget;
+              const formData = new FormData(form);
+              const nuevo = {
+                categoria: formData.get('categoria') as string,
+                monto: Number(formData.get('monto')),
+                fecha: formData.get('fecha') as string,
+              };
+              await agregarunnuevogasto(nuevo);
+              form.reset();
+            }}
+          >
+            <select name="categoria" className="border p-2 rounded text-black bg-white" required>
+              {categorias.map((cat, i) => (
+                <option key={i} value={cat}>{cat}</option>
+              ))}
+            </select>
+            <input name="monto" type="number" placeholder="Monto L." className="border p-2 rounded text-black" required />
+            <input name="fecha" type="date" className="border p-2 rounded text-black" required />
+            <button type="submit" className="bg-indigo-600 text-white py-2 rounded font-bold hover:bg-indigo-700">
+              Añadir
+            </button>
+          </form>
+          <div className="mt-4 flex gap-2 border-t pt-4">
+            <input id="newCat" type="text" placeholder="Nueva categoría..." className="border p-2 rounded text-sm text-black flex-1" />
+            <button 
+              onClick={() => {
+                const el = document.getElementById('newCat') as HTMLInputElement;
+                if(el.value) { agregarunacategoria(el.value); el.value = ''; }
+              }}
+              className="bg-gray-200 px-4 py-2 rounded text-sm text-black font-bold hover:bg-gray-300"
+            >
+              + Categoría
+            </button>
+          </div>
+        </div>
+        <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+          <h2 className="text-xl font-semibold mb-4 text-gray-700">Historial de Gastos</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-gray-100 text-gray-600">
+                  <th className="p-3 border">Fecha</th>
+                  <th className="p-3 border">Categoría</th>
+                  <th className="p-3 border text-right">Monto</th>
+                </tr>
+              </thead>
+              <tbody className="text-black">
+                {gastos.map((g, i) => (
+                  <tr key={i} className="hover:bg-gray-50">
+                    <td className="p-3 border">{g.fecha}</td>
+                    <td className="p-3 border capitalize">{g.categoria}</td>
+                    <td className="p-3 border text-right font-bold text-black">L. {Number(g.monto).toLocaleString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

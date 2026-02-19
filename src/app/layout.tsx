@@ -1,13 +1,14 @@
 import "./globals.css";
-import { GastoProvider } from "../context/gastocontext";
+import { Provaidergasto } from "../context/gastocontext";
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: React.ReactNode })
+ {
   return (
     <html lang="es">
       <body>
-        <GastoProvider>
+        <Provaidergasto>
           {children}
-        </GastoProvider>
+        </Provaidergasto>
       </body>
     </html>
   );

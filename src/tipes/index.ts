@@ -1,4 +1,3 @@
-// Definimos exactamente lo que tiene la tabla de tu base de datos
 export interface Gasto {
   idgasto?: number;
   categoria: string;
@@ -6,13 +5,12 @@ export interface Gasto {
   fecha: string;
 }
 
-// Definimos qué funciones y datos tendrá nuestro Contexto global
-export interface GastoContextType {
+export interface gastotipocontexto {
   gastos: Gasto[];
   presupuesto: number;
   categorias: string[];
-  setPresupuesto: (monto: number) => void;
-  agregarGasto: (gasto: Gasto) => Promise<void>;
-  agregarCategoria: (nuevaCat: string) => void;
+  ponerPresupuesto: (monto: number) => void;
+  agregarunnuevogasto: (gasto: Gasto) => Promise<void>;
+  agregarunacategoria: (nuevacategoria: string) => void;
   cargarGastos: () => Promise<void>;
 }
